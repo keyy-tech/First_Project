@@ -1,10 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'invApp/layout.html' %}
 
-</body>
-</html>
+<style>
+    /* Ensure proper form spacing */
+    .custom-form {
+        margin-top: 50px;
+    }
+
+    .custom-form .form-group {
+        margin-bottom: 20px; /* Adds space between form fields */
+    }
+
+    .custom-form label {
+        margin-bottom: 10px; /* Adds space between labels and inputs */
+        font-weight: 600; /* Makes the label more distinct */
+    }
+
+    .custom-form input,
+    .custom-form textarea,
+    .custom-form select {
+        padding: 10px; /* Adds internal padding for comfort */
+        margin-bottom: 20px; /* Adds space between form elements */
+        width: 100%; /* Makes inputs take full width */
+        border-radius: 5px; /* Adds smooth edges */
+        border: 1px solid #ccc; /* Border for the input fields */
+        box-sizing: border-box; /* Ensures padding doesn’t overflow */
+    }
+
+    .custom-form button {
+        margin-top: 30px; /* Creates space above the button */
+        padding: 10px 20px; /* Makes the button larger */
+    }
+</style>
+
+{% block title %} Product Form {% endblock %}
+
+{% block content %}
+    <div class="container custom-form w-50 mt-5 mb-5">
+        <h1 class="text-center mb-3">Product Form</h1>
+        <form action="{% url 'product_create' %}" method="post">
+            <div class="form-group mb-2 mt-2">
+                {% csrf_token %}
+                {{ form.as_p }} <!-- Ensure Django renders form elements as paragraphs -->
+                <button type="submit" class="btn btn-primary mt-2 w-25">Submit</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+<script>
+    document.getElementById('productForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        var form = this;
+
+        // Perform the form submission via AJAX or other method
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+            headers: {
+                'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        }).then(response => {
+            if (response.ok) {
+                form.reset(); // Reset the form fields
+            } else {
+                // Handle errors if needed
+                console.error('Form submission failed');
+            }
+        }).catch(error => {
+            console.error('Form submission error:', error);
+        });
+    });
+</script>

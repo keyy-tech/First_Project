@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'invApp/layout.html' %}
+{% block title %} Product List {% endblock %}
 
-</body>
-</html>
+{% block content %}
+    <div class="container custom-form mt-5 mb-5">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>SKU</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Supplier</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if products %}
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.product_id }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.sku }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.supplier }}</td>
+                        <td>
+                            <a href="{% url 'product_update' product.product_id %}" class="text-center btn-warning btn">Update</a>
+                            <a href="{% url 'product_delete' product.product_id %}" class="text-center btn-danger btn">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">No products available.</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+{% endblock %}
+
